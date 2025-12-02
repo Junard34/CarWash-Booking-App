@@ -27,6 +27,10 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
 
     const serviceObj = services.find(s => s.name === data.service);
 
+    // Payment status logic
+    const paymentStatus =
+      data.paymentMethod === 'Cash' ? 'pending' : 'paid';
+
     setBookings([
       ...bookings,
       {
@@ -39,7 +43,7 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         date: data.date,
         time: data.time,
         price: serviceObj.price,
-        status: 'paid', // since paid on booking
+        status: paymentStatus,
         payment: {
           method: data.paymentMethod,
           amount: data.amount,
@@ -60,9 +64,9 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         onChange={e => setData({ ...data, service: e.target.value })}
         className="w-full p-2 rounded bg-black text-white border border-gray-600"
       >
-        <option value="" className="bg-black">Select Service</option>
+        <option value="">Select Service</option>
         {services.map(s => (
-          <option key={s.id} value={s.name} className="bg-black">
+          <option key={s.id} value={s.name}>
             {s.name} - ₱{s.price}
           </option>
         ))}
@@ -97,7 +101,7 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         value={data.time}
         onChange={e => setData({ ...data, time: e.target.value })}
         className="w-full p-2 rounded bg-black text-white border border-gray-600 
-             [&::-webkit-calendar-picker-indicator]:invert"
+               [&::-webkit-calendar-picker-indicator]:invert"
       />
 
       {/* PAYMENT SECTION */}
@@ -108,12 +112,13 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         onChange={e => setData({ ...data, paymentMethod: e.target.value })}
         className="w-full p-2 rounded bg-black text-white border border-gray-600"
       >
+        <option value="">Select Payment Method</option>
         <option value="GCash">GCash</option>
         <option value="Cash">Cash</option>
         <option value="Credit Card">Credit Card</option>
       </select>
 
-     <input
+      <input
         type="text"
         inputMode="numeric"
         pattern="[0-9]*"
@@ -121,8 +126,8 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         value={data.amount}
         onChange={e => setData({ ...data, amount: e.target.value })}
         className="w-full p-2 rounded bg-black text-white border border-gray-600"
-        />
-        
+      />
+
       <button
         onClick={handleBooking}
         className="w-full bg-blue-500 text-white py-2 rounded"

@@ -7,6 +7,7 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
     plate: '',
     date: '',
     time: '',
+    location: '',          // <-- Added
     paymentMethod: '',
     amount: '',
     reference: ''
@@ -19,15 +20,15 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
       !data.plate ||
       !data.date ||
       !data.time ||
+      !data.location ||      // <-- Added validation
       !data.paymentMethod ||
       !data.amount
     ) {
-      return alert('Please fill all fields including payment.');
+      return alert('Please fill all fields including payment and location.');
     }
 
     const serviceObj = services.find(s => s.name === data.service);
 
-    // Payment status logic
     const paymentStatus =
       data.paymentMethod === 'Cash' ? 'pending' : 'paid';
 
@@ -42,6 +43,7 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         plate: data.plate,
         date: data.date,
         time: data.time,
+        location: data.location,     // <-- Save location
         price: serviceObj.price,
         status: paymentStatus,
         payment: {
@@ -103,6 +105,18 @@ const BookingForm = ({ user, bookings, setBookings, services, closeForm }) => {
         className="w-full p-2 rounded bg-black text-white border border-gray-600 
                [&::-webkit-calendar-picker-indicator]:invert"
       />
+
+      {/* ⭐ CARWASH LOCATION */}
+      <select
+        value={data.location}
+        onChange={e => setData({ ...data, location: e.target.value })}
+        className="w-full p-2 rounded bg-black text-white border border-gray-600"
+      >
+        <option value="">Select Carwash Location</option>
+        <option value="Main Branch - Saray Iligan City">Main Branch - Saray Purok  Iligan City</option>
+        <option value="North Branch - San Miguel Iligan City">North Branch - San Miguel Iligan City</option>
+        <option value="South Branch - Tubod Iligan City">South Branch - Tubod Iligan City</option>
+      </select>
 
       {/* PAYMENT SECTION */}
       <h3 className="text-lg font-semibold mt-4">Payment Details</h3>
